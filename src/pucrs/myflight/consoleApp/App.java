@@ -1,5 +1,6 @@
 package pucrs.myflight.consoleApp;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,13 +39,35 @@ public class App {
         GerenciadorRotas gRotas = new GerenciadorRotas();
         GerenciadorVoos gVoos = new GerenciadorVoos();
 
-        // cias
-        CiaAerea latam = new CiaAerea("JJ", "LATAM");
-        CiaAerea gol   = new CiaAerea("G3", "GOL");
-        CiaAerea azul  = new CiaAerea("AD", "Azul");
-        gCias.adicionar(latam);
-        gCias.adicionar(gol);
-        gCias.adicionar(azul);
+                CiaAerea latam = null;
+        CiaAerea gol = null;
+        CiaAerea azul = null;
+
+        try {
+            gCias.carregaDados();
+            latam = gCias.buscarCodigo("JJ");
+            gol = gCias.buscarCodigo("G3");
+            azul = gCias.buscarCodigo("AD");
+        } catch (IOException e) {
+            System.out.println("Erro ao carregar companhias aéreas: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        if (latam == null) {
+            latam = new CiaAerea("JJ", "LATAM");
+            gCias.adicionar(latam);
+        }
+
+        if (gol == null) {
+            gol = new CiaAerea("G3", "GOL");
+            gCias.adicionar(gol);
+        }
+
+        if (azul == null) {
+            azul = new CiaAerea("AD", "Azul");
+            gCias.adicionar(azul);
+        }
 
         System.out.println("\n[Cias - listarTodos]");
         gCias.listarTodos().forEach(System.out::println);
@@ -57,10 +80,12 @@ public class App {
             System.out.println(e.getMessage());
         }
 
-        System.out.println("\n[Cias - buscarNome(\"Azul\")]");
+        String nomeAzul = azul != null ? azul.getNome() : "Azul";
+
+        System.out.println("\n[Cias - buscarNome(\"" + nomeAzul + "\")]");
 
         try {
-            System.out.println(Objects.toString(gCias.buscarNome("Azul")));
+            System.out.println(Objects.toString(gCias.buscarNome(nomeAzul)));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
