@@ -1,9 +1,10 @@
 package pucrs.myflight.consoleApp;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import pucrs.myflight.modelo.Aeronave;
@@ -17,8 +18,8 @@ import pucrs.myflight.modelo.GerenciadorRotas;
 import pucrs.myflight.modelo.GerenciadorVoos;
 import pucrs.myflight.modelo.Rota;
 import pucrs.myflight.modelo.Voo;
+import pucrs.myflight.modelo.VooDireto;
 import pucrs.myflight.modelo.VooEscalas;
-import pucrs.myflight.modelo.VooVariasEscalas;
 
 public class App {
 
@@ -63,7 +64,7 @@ public class App {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        
+
 
         // aeronaves
         Aeronave a32N = new Aeronave("A20N", "Airbus A320neo", 180);
@@ -111,7 +112,7 @@ public class App {
         Rota rotaGRU_GIG_GOL_737 = new Rota(gol, gru, gig, b738);
         Rota rotaPOA_GIG_AZUL_E195 = new Rota(azul, poa, gig, e195);
         Rota rotaGIG_BSB_LATAM_A320 = new Rota(latam, gig, bsb, a32N);
-        
+
         gRotas.adicionar(rotaPOA_GRU_LATAM_A320);
         gRotas.adicionar(rotaGRU_GIG_GOL_737);
         gRotas.adicionar(rotaPOA_GIG_AZUL_E195);
@@ -123,23 +124,24 @@ public class App {
         gRotas.buscarPorOrigem(poa).forEach(System.out::println);
 
         // voos
-        Voo voo1 = new Voo(rotaPOA_GRU_LATAM_A320, LocalDateTime.of(2025, 10, 20, 8, 15), Duration.ofMinutes(105));
-        Voo voo2 = new Voo(rotaGRU_GIG_GOL_737, LocalDateTime.of(2025, 10, 20, 12, 30), Duration.ofMinutes(55));
-        Voo voo3 = new Voo(rotaPOA_GIG_AZUL_E195, LocalDateTime.of(2025, 10, 21, 9, 0), Duration.ofMinutes(120));
+        Voo voo1 = new VooDireto(LocalDateTime.of(2025, 10, 20, 8, 15), rotaPOA_GRU_LATAM_A320);
+        Voo voo2 = new VooDireto(LocalDateTime.of(2025, 10, 20, 12, 30), rotaGRU_GIG_GOL_737);
+        Voo voo3 = new VooDireto(LocalDateTime.of(2025, 10, 21, 9, 0), rotaPOA_GIG_AZUL_E195);
 
-        VooEscalas vooComEscala = new VooEscalas(
+        List<Rota> rotasEscalaSimples = Arrays.asList(
             rotaPOA_GRU_LATAM_A320,
-            rotaGRU_GIG_GOL_737,
+            rotaGRU_GIG_GOL_737
+        );
+        VooEscalas vooComEscala = new VooEscalas(
             LocalDateTime.of(2025, 10, 22, 7, 0),
-            Duration.ofMinutes(195)
+            rotasEscalaSimples
         );
 
-        VooVariasEscalas vooMultiplasEscalas = new VooVariasEscalas(
-            rotaPOA_GRU_LATAM_A320,
-            Arrays.asList(rotaGRU_GIG_GOL_737),
-            rotaGIG_BSB_LATAM_A320,
+        List<Rota> rotasMultiplasEscalas = new ArrayList<>(rotasEscalaSimples);
+        rotasMultiplasEscalas.add(rotaGIG_BSB_LATAM_A320);
+        VooEscalas vooMultiplasEscalas = new VooEscalas(
             LocalDateTime.of(2025, 10, 23, 6, 30),
-            Duration.ofMinutes(280)
+            rotasMultiplasEscalas
         );
 
         gVoos.adicionar(voo1);
