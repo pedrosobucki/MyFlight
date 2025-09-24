@@ -15,5 +15,10 @@ public class CiaAerea {
 	
 	public String getNome() {
 		return nome;
-	}	
+	}
+
+	@Override
+	public String toString() {
+		return String.format("CiaAerea{codigo=%s, nome=%s}", this.codigo, this.nome);
+	}
 }

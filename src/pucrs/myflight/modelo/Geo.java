@@ -16,4 +16,9 @@ public class Geo {
 	public double getLongitude() {
 		return longitude;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Geo{lat=%.4f, lon=%.4f}", latitude, longitude);
+	}
 }

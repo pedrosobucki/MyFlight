@@ -38,4 +38,15 @@ public class Voo {
 	public void setStatus(Status novo) {
 		this.status = novo;
 	}
+
+	@Override
+	public String toString() {
+		// ISO local e duração legível
+		return String.format("Voo{%s %s->%s, dt=%s, dur=%s}",
+				rota.getCia().getCodigo(),
+				rota.getOrigem().getCodigo(),
+				rota.getDestino().getCodigo(),
+				datahora,                      // LocalDateTime.toString() já é ISO-8601
+				duracao);
+	}
 }
